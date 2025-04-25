@@ -1,16 +1,15 @@
-import { NextResponse } from 'next/server';
-
-export const config = {
-  runtime: 'edge',
-};
-
-export default async function handler(req) {
+export default async function handler(req, res) {
   try {
+    // Ensure the request method is POST
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Method not allowed' });
+    }
+
     const body = await req.json();
     const { image_url } = body;
 
     if (!image_url) {
-      return NextResponse.json({ error: 'Missing image_url' }, { status: 400 });
+      return res.status(400).json({ error: 'Missing image_url' });
     }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -41,8 +40,8 @@ export default async function handler(req) {
     const data = await response.json();
     const text = data.choices?.[0]?.message?.content || '';
 
-    return NextResponse.json({ extracted: text });
+    return res.status(200).json({ extracted: text });
   } catch (err) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return res.status(500).json({ error: err.message });
   }
 }
