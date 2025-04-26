@@ -23,15 +23,35 @@ export default async function handler(req, res) {
         messages: [
           {
             role: "system",
-            content: "You are a financial assistant that extracts structured data from payment receipts.",
+            content: `
+        You are a smart financial assistant. 
+        Extract clear, structured payment data from receipts or screenshots. 
+        Return ONLY the following fields inside a top-level object called "extracted":
+        
+        - date (as YYYY-MM-DD)
+        - amount (number only)
+        - to_from (name of person or business paid or received from)
+        - particulars (short description or label for the payment)
+        
+        Format your response ONLY like this:
+        { 
+          "extracted": { 
+            "date": "2025-04-15", 
+            "amount": "2300", 
+            "to_from": "Juju Club", 
+            "particulars": "payment for March" 
+          } 
+        }
+        Do NOT include any notes or commentary.
+            `.trim()
           },
           {
             role: "user",
             content: [
-              { type: "text", text: "Extract the amount, to/from, date (if visible), and description/purpose from this payment screenshot." },
-              { type: "image_url", image_url: { url: image_url } },
-            ],
-          },
+              { type: "text", text: "Extract and structure this receipt data." },
+              { type: "image_url", image_url: { url: image_url } }
+            ]
+          }
         ],
       }),
     });
