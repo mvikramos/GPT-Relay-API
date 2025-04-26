@@ -6,6 +6,7 @@ export default async function handler(req, res) {
     }
 
     const body = req.body;
+    console.log("🖼️ Incoming image_url:", image_url);
     const { image_url } = body;
 
     if (!image_url) {
@@ -57,6 +58,7 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+    console.log("🔍 GPT response:", JSON.stringify(data, null, 2));
     const text = data.choices?.[0]?.message?.content || "";
 
     return res.status(200).json({ extracted: text });
