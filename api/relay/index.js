@@ -6,8 +6,8 @@ export default async function handler(req, res) {
     }
 
     const body = req.body;
-    console.log("🖼️ Incoming image_url:", image_url);
     const { image_url } = body;
+    console.log("🖼️ Incoming image_url:", image_url);
 
     if (!image_url) {
       return res.status(400).json({ error: "Missing image_url" });
